@@ -21,14 +21,13 @@ contract FundFundMe is Script {
         fundFundMe(mostRecentlyDeployed);
         vm.stopBroadcast();
     }
-    
 }
 
 contract WithdrawFundMe is Script {
     function withdrawFundMe(address mostRecentlyDeployed) public {
         vm.startBroadcast();
-        FundMe(payable(mostRecentlyDeployed)).withdraw(); 
-        vm.stopBroadcast();       
+        FundMe(payable(mostRecentlyDeployed)).withdraw();
+        vm.stopBroadcast();
     }
 
     function run() external {

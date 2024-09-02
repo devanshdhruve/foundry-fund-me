@@ -21,11 +21,11 @@ contract FundMeTest is Test {
         vm.deal(USER, STARTING_BALANCE);
     }
 
-    function testMinimumDollarIsFive() public view { 
+    function testMinimumDollarIsFive() public view {
         assertEq(fundMe.MINIMUM_USD(), 5e18); // Test is no longer view
     }
 
-    function testOwnerIsMsgSender() public  view  {
+    function testOwnerIsMsgSender() public view {
         assertEq(fundMe.getOwner(), msg.sender); // Test is no longer view and calls i_owner()
     }
 
@@ -62,7 +62,7 @@ contract FundMeTest is Test {
 
     function testOnlyOwnerCanWithdraw() public funded {
         vm.prank(USER);
-        vm.expectRevert(); 
+        vm.expectRevert();
         fundMe.withdraw();
     }
 
@@ -74,17 +74,18 @@ contract FundMeTest is Test {
         // Act
         vm.prank(fundMe.getOwner());
         fundMe.withdraw();
-        
+
         // Assert
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
         uint256 endingFundMeBalance = address(fundMe).balance;
         assertEq(endingFundMeBalance, 0);
         assertEq(startingFundMeBalance + startingOwnerBalance, endingOwnerBalance);
     }
-    function testWithdrawFromMultipleFunders() public funded{
+
+    function testWithdrawFromMultipleFunders() public funded {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
-        for(uint160 i = startingFunderIndex; i<numberOfFunders; i++){
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             hoax(address(i), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
         }
@@ -96,14 +97,14 @@ contract FundMeTest is Test {
         fundMe.withdraw();
         vm.stopPrank();
 
-        assert(address(fundMe).balance ==0);
+        assert(address(fundMe).balance == 0);
         assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
     }
 
-    function testWithdrawFromMultipleFundersCheaper() public funded{
+    function testWithdrawFromMultipleFundersCheaper() public funded {
         uint160 numberOfFunders = 10;
         uint160 startingFunderIndex = 1;
-        for(uint160 i = startingFunderIndex; i<numberOfFunders; i++){
+        for (uint160 i = startingFunderIndex; i < numberOfFunders; i++) {
             hoax(address(i), SEND_VALUE);
             fundMe.fund{value: SEND_VALUE}();
         }
@@ -115,7 +116,7 @@ contract FundMeTest is Test {
         fundMe.cheaperWithdraw();
         vm.stopPrank();
 
-        assert(address(fundMe).balance ==0);
+        assert(address(fundMe).balance == 0);
         assert(startingFundMeBalance + startingOwnerBalance == fundMe.getOwner().balance);
     }
 }
